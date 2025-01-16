@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real-Time Image Upload</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.1/socket.io.min.js"></script>
+    <script>
+        // Connect to the SocketIO server
+        var socket = io.connect('http://' + document.domain + ':' + location.port);
+
+        // Listen for new image events from the server
+        socket.on('new_image', function(data) {
+            var imgContainer = document.getElementById('image-container');
+            var imgElement = document.createElement('img');
+            imgElement.src = data.url;
+            imgElement.alt = data.message;
+            imgElement.width = 300;
+            imgContainer.appendChild(imgElement);
+        });
+    </script>
+</head>
+<body>
+    <h1>Uploaded Images</h1>
+    <div id="image-container">
+        {% for image in images.values() %}
+            <img src="{{ image.url }}" alt="{{ image.message }}" width="300">
+        {% endfor %}
+    </div>
+</body>
+</html>
